@@ -1,0 +1,629 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>Droga do Zend Expressive@Phpers Łódź #3</title>
+
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/black.css">
+
+        <!-- Theme used for syntax highlighting of code -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section>
+                    <h2>Droga do Zend Expressive</h2>
+                    <p>Dawid Królak</p>
+                    <p><small>taavit@gmail.com</small></p>
+                    <p>
+                        <small>
+                            <a href="https://github.com/taavit">https://github.com/taavit</a>
+                        </small>
+                    </p>
+                    <p>
+                        <small>
+                            <a href="https://twitter.com/Taavicjusz">https://twitter.com/Taavicjusz</a>
+                        </small>
+                    </p>
+                </section>
+                <section>
+                    <h3>Projekt</h3>
+                </section>
+                <section>
+                    <p>Pewne urządzenie pomiarowe X</p>
+                    <p class="fragment">Panel dla użytkowników monitorujący pomiary</p>
+                    <p class="fragment">Panel serwisowy dla techników</p>
+                </section>
+                <section
+                    <ul>
+                        <li>System wbudowany</li>
+                        <li class="fragment">Mało miejsca na aplikację</li>
+                        <li class="fragment">Niska moc obliczeniowa</li>
+                    </ul>
+                    <aside class="notes">
+                        <ul>
+                            <li>Oparte na linuksie,</li>
+                            <li>Pamięć flash, oszczędzamy miejsce na pomiary</li>
+                            <li>Musimy zmieścić instrukcje, dokumentacje, jsy, obrazki</li>
+                            <li>moc obliczeniowa jak w RPi0</li>
+                        </ul>
+                    </aside>
+                </section>
+                <section>
+                    <h3>Ale z drugiej strony …</h3>
+                    <ul>
+                        <li class="fragment">Tylko jeden lub dwóch użytkowników w tym samym czasie</li>
+                        <li class="fragment">Wszystko dzieje się w sieci lokalnej</li>
+                        <li class="fragment">Skalowalność nie jest problemem</li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>Co wybrać?</h3>
+                    <ul>
+                        <li class="fragment">Symfony?</li>
+                        <li class="fragment">Silex?</li>
+                    </ul>
+                </section>
+                <section>
+                    <h1>Silex!</h1>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    ```bash
+                    composer require silex/silex
+                    ./deploy.sh
+                    ```
+                    </script>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    ```bash
+                    > Brak miejsca na urządzeniu.
+                    ```
+                    </script>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    ```bash
+                    cd vendor
+                    du -cha *
+                    12M    razem (3,4M)
+                    ```
+                    </script>
+                </section>
+                <section>
+                    <h2>Problem</h2>
+                </section>
+                <section>
+                    <h2>Rozwiązanie</h2>
+                    <p class="fragment">Usunąć wszystkie testy, i dokumentacje!</p>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    ```bash
+                    #...
+                    5,4M    razem (1,7M)
+                    ```
+                    </script>
+                </section>
+
+                <section>
+                    <p>A może nie wykorzystam wszystkiego?</p>
+                    <h2 class="fragment">Sprawdźmy!</h2>
+                    <aside class="notes">
+                        Silex jest świetny, i po usunięciu dokumentacji może pasować,
+                        ale może gdzieś tam jest jakieś rozwiązanie lepiej dopasowane do mojego problemu?
+                        Może zamknąłem się na inne rozwiązania i staram się symfony wcisnąć gdzie się da?
+                    </aside>
+                </section>
+                <section>
+                    <h2>Co dostajemy z Silexem</h2>
+                    <p class="fragment">HttpFoundation</p>
+                    <p class="fragment">Routing</p>
+                    <p class="fragment">Pimple</p>
+                    <p class="fragment">EventDispatcher</p>
+                    <p class="fragment">HttpKernel</p>
+                </section>
+                <section>
+                    Zacznijmy od fundamentów
+                </section>
+                <section>
+                    symfony/HttpFoundation
+                </section>
+                <section>
+                    <p>Co potrzebuję</p>
+                    <p class="fragment">Request</p>
+                    <p class="fragment">Response</p>
+                </section>
+                <section>
+                    <p>A bez czego mogę się obejść</p>
+                    <ul>
+                        <li class="fragment">Session</li>
+                        <li class="fragment">*Handler</li>
+                        <li class="fragment">*Storage</li>
+                        <li class="fragment">Flash</li>
+                        <li class="fragment">ApacheRequest</li>
+                        <li class="fragment">*Bag</li>
+                    </ul>
+                </section>
+                <section>
+                    <p>Minimalna funkcjonalność</p>
+                </section>
+                <section>
+                    <span class="fragment">P</span>
+                    <span class="fragment">S</span>
+                    <span class="fragment">R</span>
+                    <span class="fragment">-</span>
+                    <span class="fragment">7</span>
+                    <p class="fragment">
+                        <a href="http://www.php-fig.org/psr/psr-7/">
+                            http://www.php-fig.org/psr/psr-7/
+                        </a>
+                    </p>
+                </section>
+                <section>
+                    <p>MessageInterface</p>
+                    <p>RequestInterface</p>
+                    <p>ServerRequestInterface</p>
+                    <p>ResponseInterface</p>
+                    <p>StreamInterface</p>
+                    <p>UriInterface</p>
+                    <p>UploadedFileInterface</p>
+                </section>
+                <section>
+                    Interfejsy są, czas na implementację!
+                </section>
+                <section>
+                    <p>
+                        <a href="https://github.com/zendframework/zend-diactoros/">
+                            zendframework/zend-diactoros
+                        </a>(dawniej <a href="https://github.com/phly/http/">phly/http</a>)</p>
+                </section>
+                <section>
+                    Zajrzyjmy do API!
+                </section>
+                <section>
+                    <p>Request Message</p>
+                    <p>ServerRequest Message</p>
+                    <p>Response Message</p>
+                    <p>ServerRequestFactory</p>
+                    <p>URI</p>
+                    <p>Stream</p>
+                    <p>UploadedFile</p>
+                    <p>Server</p>
+                </section>
+                <section>
+                    <p>Nie wygląda na bardzo rozbudowaną</p>
+                    <p class="fragment">I dobrze</p>
+                </section>
+                <section>
+                    <p>Sprawdźmy jak się z tym pracuje</p>
+                    <p class="fragment">Witajcie Phpersi!</p>
+                </section>
+                <section>
+                    $response = $application($request);
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    ```php
+                    <?php
+
+                    $application = function($request) {
+                        return new Zend\Diactoros\Response\HtmlResponse(
+                            '<h1>Witajcie Phpersi!</h1>'
+                        );
+                    };
+
+                    $request = Zend\Diactoros\ServerRequestFactory::fromGlobals();
+
+                    $response = $application($request);
+
+                    $emiter = new Zend\Diactoros\Response\SapiEmiter();
+                    $emiter->emit($response);
+
+                    ```
+                    </script>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    Rozbudujmy przykład
+                    ```
+                    http://localhost:8000/
+                    http://localhost:8000/pomiary
+                    ```
+                    </script>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    Witacz
+
+                    ```php
+                    $witacz = function($request) {
+                        return new Zend\Diactoros\Response\HtmlResponse(
+                            '<h1>Witajcie Phpersi!</h1>'
+                        );
+                    };
+                    ```
+                    </script>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    Pomiary
+
+                    ```php
+                    $pomiary = function ($request) {
+                        return new Zend\Diactoros\Response\HtmlResponse(
+                            '<h1>Pomiary!</h1>'
+                        );
+                    };
+                    ```
+                    </script>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    Łączymy
+
+                    ```php
+                    use Psr\Http\Message\ServerRequestInterface;
+
+                    $application = function(ServerRequestInterface $request) {
+                        switch ($request->getUri()->getPath()) {
+                            case '/pomiary': return $pomiary($request);
+                            case '/':
+                            default: return $witacz($request);
+                        }
+                    };
+
+                    $request = Zend\Diactoros\ServerRequestFactory::fromGlobals();
+
+                    $response = $application($request);
+
+                    $emiter = new Zend\Diactoros\Response\SapiEmiter();
+                    $emiter->emit($response);
+
+                    ```
+                    </script>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    A może bardziej naturalnie?
+
+                    ```php
+                    $application->get('/pomiary', $pomiary);
+                    $application->get('/', $witacz);
+
+                    $response = $application($request);
+
+                    $emiter = new Zend\Diactoros\Response\SapiEmiter();
+                    $emiter->emit($response);
+                    ```
+                    </script>
+                </section>
+                <section>
+                    <a href="https://github.com/zendframework/zend-stratigility">
+                        zendframework/zend-stratigility
+                    </a> (dawniej <a href="https://github.com/phly/conduit/">phly/conduit</a>)
+                </section>
+                <section>
+                    <h4>API</h4>
+                    <p>MiddlewarePipe</p>
+                    <p>MiddlewareInterface</p>
+                    <p>Next</p>
+                    <p>FinalHandler</p>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    Jak działa MiddlewarePipe?
+
+                    ```php
+                    $middlewarePipe = new Zend\Stratigility\MiddlewarePipe();
+
+                    $response = $middlewarePipe(
+                        $request,
+                        $response
+                    );
+                    ```
+                    </script>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    Ważna funkcja
+
+                    ```php
+                    $middlewarePipe->pipe(...);
+                    ```
+                    </script>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    ```php
+                    <?php
+
+                    $middlewarePipe = new Zend\Stratigility\MiddlewarePipe();
+
+                    $middlewarePipe->pipe('/pomiary', $pomiary);
+                    $middlewarePipe->pipe('/', $witacz);
+
+                    $request = Zend\Diactoros\ServerRequestFactory::fromGlobals();
+
+                    $response = $middlewarePipe($request);
+
+                    $emiter = new Zend\Diactoros\Response\SapiEmiter();
+                    $emiter->emit($response);
+                    ```
+                    </script>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    Ale moment, to jest tylko routing, a gdzie before i after?
+
+                     ```php
+                    $app
+                        ->before($logRequest)
+                        ->before($auth);
+                    $app
+                        ->after($logResponse);
+                    ```
+                    </script>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    Także w middlewarze!
+
+                     ```php
+                    $middleware = function($request, $response, $next) {
+
+                        // before
+
+                        $nextResponse = $next($request, $response);
+
+                        // after
+
+                        return $nextResponse;
+                    };
+
+                    $middlewarePipe->pipe($middleware);
+                    ```
+                    </script>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    Dodajmy coś!
+
+                     ```php
+                    $stderr = fopen('php://stderr', 'w');
+
+                    $middleware = function($request, $response, $next) use ($stderr) {
+                        fwrite($stderr, "\"{$request->getUri()->getPath()}\"");
+                        $start = microtime(true);
+                        $nextResponse = $next($request, $response);
+                        $end = microtime(true);
+                        $handlingTime = $end - $start;
+                        fwrite($stderr, " handled in {$handlingTime} \n");
+                        return $nextResponse;
+                    };
+
+                    $middlewarePipe->pipe($middleware);
+                    ```
+                    </script>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    Możemy też dodać/usunąć coś z żądania czy odpowiedzi
+
+                     ```php
+                    $middleware = function($request, $response, $next) {
+                        $nextResponse = $next(
+                            $request->withAttribute('foo', 'bar'),
+                            $response
+                        );
+                        return $nextResponse->withHeader(
+                            'X-SPECIAL-HEADER',
+                            'added'
+                        );
+                    };
+
+                    $middlewarePipe->pipe($middleware);
+                    ```
+                    </script>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    Zabezpieczmy aplikację
+
+                     ```php
+                    function isAuthorized($request) {...}
+                    function whoIsAuthenticated($request) {...}
+
+                    $authorization = function($request, $response, $next) {
+                        if (!isAuthorized($request)) {
+                            throw new ForbiddenException();
+                        }
+                        return $next(
+                            $request->withAttribute(
+                                'authorized',
+                                whoIsAuthenticated($request)),
+                            $response
+                        );
+                    };
+
+                    $middlewarePipe->pipe($authorization);
+                    ```
+                    </script>
+                </section>
+                <section>
+                    <p>Rzuciliśmy wyjątkiem</p>
+                    <p class="fragment">Czas go złapać!</p>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    ```php
+                    $errorMiddleware = function ($error, $request, $response, $next) {
+                        if ($error instanceof ForbiddenException) {
+                            return new HtmlResponse(
+                                '<h1>Forbidden</h1>',
+                                403
+                            );
+                        }
+                        return $next($request, $response, $error);
+                    }
+                    $middlewarePipe->pipe($errorMiddleware);
+                    ```
+                    </script>
+                </section>
+                <section>
+                    Ale zaraz, routing? A jak dodać parametry?
+                </section>
+                <section>
+                    <p>Jeśli nie symfony/Routing</p>
+                    <p class="fragment">A może coś lżejszego?</p>
+                    <p class="fragment">Na przykład:</p>
+                    <p class="fragment"><a href="https://github.com/nikic/FastRoute">nikic/FastRoute</a></p>
+                </section>
+                <section>
+                    FastRoute jako middleware!
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                    ```php
+                    $routeInfo = $this->dispatcher->dispatch(
+                        $request->getMethod(),
+                        $request->getUri()->getPath()
+                    );
+                    // [...]
+                    $request = $request
+                        ->withAttribute('action', $action)
+                        ->withAttribute('parameters', $parameters)
+                    ;
+                    // [...]
+                    return $next($request, $response, $next);
+                    ```
+                    (Przykład: https://github.com/monii/monii-nikic-fast-route-psr7-middleware)
+                    </script>
+                </section>
+                <section>
+                    <p>A co z $middleware->pipe('/path', $action)?</p>
+                    <p class="fragment">Moduły aplikacji</p>
+                    <p class="fragment">A te mogą/nie muszą zawierać własne routingi</p>
+                    <aside class="notes">
+                        Na przykład API jest routowalny,
+                        ale strona główna przekierowuje zawsze do index.html, gdzie przeglądarka obsługuje dalej już „history”
+                    </aside>
+                </section>
+                <section>
+                    <p>No dobrze, zorganizujmy jakoś middlewary, kontrolery …</p>
+                </section>
+                <section>
+                    pimple\pimple
+                </section>
+                <section>
+                    <p>Obecny stos:</p>
+                    <ul>
+                        <li class="fragment">Zend Diactoros</li>
+                        <li class="fragment">Zend Stratigility</li>
+                        <li class="fragment">FastRoute</li>
+                        <li class="fragment">Pimple</li>
+                    </ul>
+                </section>
+                <section>
+                    <p>W międzyczasie zacząłem interesować się <a href="https://github.com/zendframework/zend-expressive">Zend Expressive</a></p>
+                    <p>I jakie ma komponenty?</p>
+                    <ul>
+                        <li class="fragment">Zend Diactoros</li>
+                        <li class="fragment">Zend Stratigility</li>
+                        <li class="fragment">FastRoute <span class="fragment">(lub Aura.Router albo Zend Router)</span></li>
+                        <li class="fragment">Pimple <span class="fragment">(lub Aura.Di albo Zend ServiceManager)</span></li>
+                        <li class="fragment">Plates <span class="fragment">(lub Twig albo Zend View)</span></li>
+                        <li class="fragment">Whoops <span class="fragment">(lub nic)</span></li>
+                    </ul>
+                    <aside class="notes">
+                        Instalowane całkowicie osobno, Zend Expressive daje tylko interfejsy
+                    </aside>
+                </section>
+
+                <section data-markdown>
+                    <script type="text/template">
+                    Zend Expressive Installer
+
+                    ```bash
+                    composer create-project zendframework/zend-expressive-skeleton .
+                    ```
+                </script>
+                </section>
+                <section>
+                    <img src="img/expressive.step0.png" />
+                </section>
+                <section>
+                    <img src="img/expressive.step1.png" />
+                </section>
+                <section>
+                    <img src="img/expressive.step2.png" />
+                </section>
+                <section>
+                    <img src="img/expressive.step3.png" />
+                </section>
+                <section>
+                    <img src="img/expressive.step4.png" />
+                </section>
+                <section>
+                    I tak poznałem Zend Expressive
+                    <aside class="notes">
+                        6.9M ten zestaw
+                        2.6M bez szablonów
+                    </aside>
+                </section>
+                <section data-markdown>
+                    <script type="text/template">
+                        Rozmiar stosu bez Zend Expressive
+
+                        ```bash
+                        cd vendor
+                        du -cha *
+                        1000K    razem (620K)
+                        ```
+                    </script>
+                </section>
+                <section>
+                    <p>Pytania?</p>
+                    <p class="fragment">Dziękuję za uwagę</p>
+                </section>
+                <section>
+                    THE END
+                </section>
+            </div>
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+            // More info https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                history: true,
+                mouseWheel: true,
+                center: true,
+
+                // More info https://github.com/hakimel/reveal.js#dependencies
+                dependencies: [
+                    { src: 'plugin/markdown/marked.js' },
+                    { src: 'plugin/markdown/markdown.js' },
+                    { src: 'plugin/notes/notes.js', async: true },
+                    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                ]
+            });
+        </script>
+    </body>
+</html>
