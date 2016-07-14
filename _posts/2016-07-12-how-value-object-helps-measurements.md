@@ -26,22 +26,23 @@ Let's take a look how this object might looks like.
 
 ```php
 <?php
-class Temperature
+
+final class Temperature
 {
     // private constructor to keep factory method consistent, fromKelvin, fromFahrenheit, fromCelsius
-    private function __construct(float $kelvins)
+    private function __construct(float $kelvin)
     {
-        $this->value = $kelvins;
+        $this->value = $kelvin;
     }
 
-    public static function fromKelvins(float $kelvins): Temperature
+    public static function fromKelvin(float $kelvin): Temperature
     {
         return new self($kelvins);
     }
 
-    public static function fromFahrenheit(float $fahrenheits): Temperature
+    public static function fromFahrenheit(float $fahrenheit): Temperature
     {
-        return new self(($fahrenheits - 32)/1.8 + 273.15);
+        return new self(($fahrenheit - 32) / 1.8 + 273.15);
     }
 }
 ```
@@ -50,7 +51,8 @@ Distance, speed are similar cases. Distance and speed aren't change depend how w
 
 ```php
 <?php
-class Distance
+
+final class Distance
 {
     // private constructor to keep factory method consistent, fromMeters, fromFeets
     private function __construct(float $meters)
